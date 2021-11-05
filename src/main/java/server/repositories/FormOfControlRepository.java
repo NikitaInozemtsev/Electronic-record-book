@@ -4,4 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import server.models.FormOfControl;
 
 public interface FormOfControlRepository extends JpaRepository<FormOfControl, Long> {
+    public FormOfControl findByName(String name);
 }
