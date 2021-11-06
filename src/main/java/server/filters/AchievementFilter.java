@@ -1,5 +1,6 @@
 package server.filters;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
@@ -8,10 +9,12 @@ import java.time.LocalDate;
 public class AchievementFilter {
     @Nullable
     @DateTimeFormat(pattern = "dd.MM.yyyy")
+    @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate dateFrom;
 
     @Nullable
     @DateTimeFormat(pattern = "dd.MM.yyyy")
+    @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate dateTo;
 
     @Nullable

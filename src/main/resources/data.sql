@@ -24,4 +24,5 @@ insert into db.public.professors (surname, name, patronymic, post, department_id
 ('Кабанов', 'Тимур', 'Тимурович', 'Какая-то должность', 1);
 
 insert into db.public.achievements (date, mark, semester, discipline_id, form_of_control_id, professor_id, student_id) values
-(to_date('24.01.2021', 'dd.MM.yyyy'), 'Хорошо', 3, 1, 1, 1, 1);
+(to_date('24.01.2021', 'dd.MM.yyyy'), 'Хорошо', 3, 1, 1, 1, 1),
+(to_date('18.01.2021', 'dd.MM.yyyy'), 'Отлично', 3, 1, 1, 1, 1);

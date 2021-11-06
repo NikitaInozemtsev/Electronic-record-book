@@ -3,9 +3,10 @@ package server.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import server.dto.AchievementDto;
 import server.filters.AchievementFilter;
 import server.models.Achievement;
-import server.repositories.AchievementRepository;
+import server.repositories.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,30 +19,71 @@ import java.util.List;
 public class AchievementService {
 
     @Autowired
-    private AchievementRepository repository;
+    ProfessorRepository professorRepository;
+    @Autowired
+    FormOfControlRepository formOfControlRepository;
+    @Autowired
+    DisciplineRepository disciplineRepository;
+    @Autowired
+    private AchievementRepository achievementRepository;
+    @Autowired
+    private StudentRepository studentRepository;
 
     public List<Achievement> findAll(AchievementFilter filter) {
-        return repository.findAll(byFilter(filter));
+        return achievementRepository.findAll(byFilter(filter));
     }
 
-    public void createAchievement(Achievement achievement) {
-        repository.save(achievement);
+    public boolean createAchievement(AchievementDto achievementDto) {
+
+        try {
+            Achievement achievement = Achievement.builder()
+                    .student(studentRepository.findById(achievementDto.getStudentId()).get())
+                    .professor(professorRepository.findById(achievementDto.getProfessorId()).get())
+                    .formOfControl(formOfControlRepository.findById(achievementDto.getFormOfControlId()).get())
+                    .discipline(disciplineRepository.findById(achievementDto.getDisciplineId()).get())
+                    .mark(achievementDto.getMark())
+                    .semester(achievementDto.getSemester())
+                    .date(achievementDto.getDate())
+                    .build();
+            achievementRepository.save(achievement);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
-    public void deleteById(Long id) {
-        repository.deleteById(id);
+    public boolean deleteById(Long id) {
+        try {
+            achievementRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
-    public String deleteByIds(List<Long> ids) {
-        List<Achievement> achievements = repository.findAllById(ids);
-        repository.deleteAll(achievements);
-        return "Удалено " + achievements.size() + " achievement-ов";
+    public Integer deleteByIds(List<Long> ids) {
+        try {
+            List<Achievement> achievements = achievementRepository.findAllById(ids);
+            achievementRepository.deleteAll(achievements);
+            return achievements.size();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
-    public String deleteByFilter(AchievementFilter filter) {
-        List<Achievement> achievements = repository.findAll(byFilter(filter));
-        repository.deleteAll(achievements);
-        return "Удалено " + achievements.size() + " achievement-ов";
+    public Integer deleteByFilter(AchievementFilter filter) {
+        try {
+            List<Achievement> achievements = achievementRepository.findAll(byFilter(filter));
+            achievementRepository.deleteAll(achievements);
+            return achievements.size();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private Specification<Achievement> byFilter(AchievementFilter filter) {
