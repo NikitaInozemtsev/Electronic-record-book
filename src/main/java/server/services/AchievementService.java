@@ -24,6 +24,26 @@ public class AchievementService {
         return repository.findAll(byFilter(filter));
     }
 
+    public void createAchievement(Achievement achievement) {
+        repository.save(achievement);
+    }
+
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
+
+    public String deleteByIds(List<Long> ids) {
+        List<Achievement> achievements = repository.findAllById(ids);
+        repository.deleteAll(achievements);
+        return "Удалено " + achievements.size() + " achievement-ов";
+    }
+
+    public String deleteByFilter(AchievementFilter filter) {
+        List<Achievement> achievements = repository.findAll(byFilter(filter));
+        repository.deleteAll(achievements);
+        return "Удалено " + achievements.size() + " achievement-ов";
+    }
+
     private Specification<Achievement> byFilter(AchievementFilter filter) {
         return new Specification<Achievement>() {
             @Override

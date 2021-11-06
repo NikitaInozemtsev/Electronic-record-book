@@ -1,25 +1,27 @@
 package server.services;
 
-import configuration.TestPostgresqlContainer;
-import org.junit.ClassRule;
+import configuration.BaseDbTestClass;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit4.SpringRunner;
 import server.filters.AchievementFilter;
 import server.models.*;
 import server.repositories.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
+@RunWith(SpringRunner.class)
 @SpringBootTest
-class AchievementServiceTest {
-
-    @ClassRule
-    public static PostgreSQLContainer<TestPostgresqlContainer> postgreSQLContainer = TestPostgresqlContainer.getInstance();
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+class AchievementServiceTest extends BaseDbTestClass {
 
     @Autowired
     private AchievementService service;
@@ -59,12 +61,11 @@ class AchievementServiceTest {
                         .build()
         ));
 
-        departmentRepository.save(
-                Department.builder()
-                        .name("Какая-то кафедра")
-                        .phoneNumber("1234567890")
-                        .headOfTheDepartment("Empty")
-                        .build());
+        departmentRepository.save(Department.builder()
+                .name("Какая-то кафедра")
+                .phoneNumber("1234567890")
+                .headOfTheDepartment("Empty")
+                .build());
 
         disciplineRepository.saveAll(List.of(
                 Discipline.builder()
@@ -133,11 +134,24 @@ class AchievementServiceTest {
                         .build()
         ));
 
+
+    }
+
+    @AfterEach
+    public void clean() {
+        achievementRepository.deleteAll();
+        formOfControlRepository.deleteAll();
+        studentRepository.deleteAll();
+        groupRepository.deleteAll();
+        professorRepository.deleteAll();
+        disciplineRepository.deleteAll();
+        specialtyRepository.deleteAll();
+        departmentRepository.deleteAll();
     }
 
 
     @Test
-    void findAll() {
+    void findAllTest() {
 
         List<Achievement> data = List.of(
                 Achievement.builder()
@@ -211,4 +225,118 @@ class AchievementServiceTest {
         filter.setDateFrom(LocalDate.of(2021, 1, 16));
         Assertions.assertEquals(service.findAll(filter), data.subList(0, 1));
     }
+
+    @Test
+    public void deleteByIdTest() {
+        Achievement achievement =
+                Achievement.builder()
+                        .date(LocalDate.of(2021, 1, 16))
+                        .formOfControl(formOfControlRepository.findByName("Экзамен"))
+                        .discipline(disciplineRepository.findById(1L).get())
+                        .semester(3)
+                        .mark("Хорошо")
+                        .professor(professorRepository.findById(1L).get())
+                        .student(studentRepository.findById(1L).get())
+                        .build();
+
+        achievementRepository.save(achievement);
+
+        Assertions.assertEquals(achievementRepository.findById(1L).get(), achievement);
+
+        service.deleteById(1L);
+
+        Assertions.assertEquals(achievementRepository.findById(1L), Optional.empty());
+    }
+
+    @Test
+    public void deleteByIdsTest() {
+        List<Achievement> data = List.of(
+                Achievement.builder()
+                        .date(LocalDate.of(2021, 1, 16))
+                        .formOfControl(formOfControlRepository.findByName("Экзамен"))
+                        .discipline(disciplineRepository.findById(1L).get())
+                        .semester(3)
+                        .mark("Хорошо")
+                        .professor(professorRepository.findById(1L).get())
+                        .student(studentRepository.findById(1L).get())
+                        .build(),
+                Achievement.builder()
+                        .date(LocalDate.of(2021, 1, 18))
+                        .formOfControl(formOfControlRepository.findByName("Экзамен"))
+                        .discipline(disciplineRepository.findById(2L).get())
+                        .semester(3)
+                        .mark("Отлично")
+                        .professor(professorRepository.findById(2L).get())
+                        .student(studentRepository.findById(2L).get())
+                        .build()
+        );
+
+        achievementRepository.saveAll(data);
+
+        Assertions.assertEquals(achievementRepository.findAll(), data);
+
+        service.deleteByIds(List.of(data.get(0).getId(), data.get(1).getId()));
+
+        Assertions.assertTrue(achievementRepository.findAll().isEmpty());
+    }
+
+    @Test
+    public void deleteByFilterTest() {
+        List<Achievement> data = List.of(
+                Achievement.builder()
+                        .date(LocalDate.of(2021, 1, 16))
+                        .formOfControl(formOfControlRepository.findByName("Экзамен"))
+                        .discipline(disciplineRepository.findById(1L).get())
+                        .semester(3)
+                        .mark("Хорошо")
+                        .professor(professorRepository.findById(1L).get())
+                        .student(studentRepository.findById(1L).get())
+                        .build(),
+                Achievement.builder()
+                        .date(LocalDate.of(2021, 1, 18))
+                        .formOfControl(formOfControlRepository.findByName("Экзамен"))
+                        .discipline(disciplineRepository.findById(2L).get())
+                        .semester(3)
+                        .mark("Отлично")
+                        .professor(professorRepository.findById(2L).get())
+                        .student(studentRepository.findById(2L).get())
+                        .build(),
+                Achievement.builder()
+                        .date(LocalDate.of(2020, 12, 26))
+                        .formOfControl(formOfControlRepository.findByName("Зачет"))
+                        .discipline(disciplineRepository.findById(1L).get())
+                        .semester(1)
+                        .mark("Зачтено")
+                        .professor(professorRepository.findById(2L).get())
+                        .student(studentRepository.findById(3L).get())
+                        .build()
+        );
+
+        achievementRepository.saveAll(data);
+
+        Assertions.assertEquals(achievementRepository.findAll(), data);
+        AchievementFilter filter = new AchievementFilter();
+        filter.setSemester(3);
+        service.deleteByFilter(filter);
+
+        Assertions.assertEquals(achievementRepository.findAll().size(), 1);
+        Assertions.assertEquals(achievementRepository.findAll(), data.subList(2, 3));
+    }
+
+    @Test
+    public void createAchievementTest() {
+        Achievement achievement = Achievement.builder()
+                .date(LocalDate.of(2021, 1, 16))
+                .formOfControl(formOfControlRepository.findByName("Экзамен"))
+                .discipline(disciplineRepository.findById(1L).get())
+                .semester(3)
+                .mark("Хорошо")
+                .professor(professorRepository.findById(1L).get())
+                .student(studentRepository.findById(1L).get())
+                .build();
+        service.createAchievement(achievement);
+
+        Assertions.assertEquals(achievementRepository.findAll(), List.of(achievement));
+    }
+
 }
