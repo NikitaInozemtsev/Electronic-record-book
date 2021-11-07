@@ -1,15 +1,13 @@
 package server.services;
 
 import configuration.BaseDbTestClass;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
+import server.dto.AchievementDto;
 import server.filters.AchievementFilter;
 import server.models.*;
 import server.repositories.*;
@@ -18,10 +16,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
+
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class AchievementServiceTest extends BaseDbTestClass {
+public class AchievementServiceTest extends BaseDbTestClass {
 
     @Autowired
     private AchievementService service;
@@ -134,24 +132,10 @@ class AchievementServiceTest extends BaseDbTestClass {
                         .build()
         ));
 
-
     }
-
-    @AfterEach
-    public void clean() {
-        achievementRepository.deleteAll();
-        formOfControlRepository.deleteAll();
-        studentRepository.deleteAll();
-        groupRepository.deleteAll();
-        professorRepository.deleteAll();
-        disciplineRepository.deleteAll();
-        specialtyRepository.deleteAll();
-        departmentRepository.deleteAll();
-    }
-
 
     @Test
-    void findAllTest() {
+    public void findAllTest() {
 
         List<Achievement> data = List.of(
                 Achievement.builder()
@@ -325,7 +309,16 @@ class AchievementServiceTest extends BaseDbTestClass {
 
     @Test
     public void createAchievementTest() {
+        AchievementDto dto = new AchievementDto(1L,
+                1L,
+                1L,
+                1L,
+                1L,
+                "Хорошо",
+                3,
+                LocalDate.of(2021, 1, 16));
         Achievement achievement = Achievement.builder()
+                .id(1L)
                 .date(LocalDate.of(2021, 1, 16))
                 .formOfControl(formOfControlRepository.findByName("Экзамен"))
                 .discipline(disciplineRepository.findById(1L).get())
@@ -334,7 +327,7 @@ class AchievementServiceTest extends BaseDbTestClass {
                 .professor(professorRepository.findById(1L).get())
                 .student(studentRepository.findById(1L).get())
                 .build();
-        service.createAchievement(achievement);
+        service.createAchievement(dto);
 
         Assertions.assertEquals(achievementRepository.findAll(), List.of(achievement));
     }
