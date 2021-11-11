@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import server.dto.AchievementDto;
 import server.filters.AchievementFilter;
 import server.models.Achievement;
-import server.repositories.*;
+import server.repositories.AchievementRepository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,17 +17,17 @@ import java.util.List;
 
 @Service
 public class AchievementService {
-
-    @Autowired
-    ProfessorRepository professorRepository;
-    @Autowired
-    FormOfControlRepository formOfControlRepository;
-    @Autowired
-    DisciplineRepository disciplineRepository;
     @Autowired
     private AchievementRepository achievementRepository;
+
     @Autowired
-    private StudentRepository studentRepository;
+    private ProfessorService professorService;
+    @Autowired
+    private FormOfControlService formOfControlService;
+    @Autowired
+    private DisciplineService disciplineService;
+    @Autowired
+    private StudentService studentService;
 
     public List<Achievement> findAll(AchievementFilter filter) {
         return achievementRepository.findAll(byFilter(filter));
@@ -37,10 +37,10 @@ public class AchievementService {
 
         try {
             Achievement achievement = Achievement.builder()
-                    .student(studentRepository.findById(achievementDto.getStudentId()).get())
-                    .professor(professorRepository.findById(achievementDto.getProfessorId()).get())
-                    .formOfControl(formOfControlRepository.findById(achievementDto.getFormOfControlId()).get())
-                    .discipline(disciplineRepository.findById(achievementDto.getDisciplineId()).get())
+                    .student(studentService.findOrThrow(achievementDto.getStudentId()))
+                    .professor(professorService.findOrThrow(achievementDto.getProfessorId()))
+                    .formOfControl(formOfControlService.findOrThrow(achievementDto.getFormOfControlId()))
+                    .discipline(disciplineService.findOrThrow(achievementDto.getDisciplineId()))
                     .mark(achievementDto.getMark())
                     .semester(achievementDto.getSemester())
                     .date(achievementDto.getDate())
