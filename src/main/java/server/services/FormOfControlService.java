@@ -3,7 +3,6 @@ package server.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.exception.NotFoundResourceException;
-import server.models.Discipline;
 import server.models.FormOfControl;
 import server.repositories.FormOfControlRepository;
 

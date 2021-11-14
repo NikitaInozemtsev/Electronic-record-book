@@ -92,7 +92,7 @@ public class GroupServiceTest extends BaseDbTestClass {
     }
 
     @Test
-    public void createDisciplineTest() {
+    public void createGroupTest() {
         GroupDto dto = new GroupDto(1L, "Группа 1", 1, 1L);
         Group group = Group.builder()
                 .id(1L)

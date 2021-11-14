@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.dto.SpecialtyDto;
 import server.exception.NotFoundResourceException;
-import server.models.Discipline;
 import server.models.Specialty;
 import server.repositories.SpecialtyRepository;
 
@@ -47,6 +46,20 @@ public class SpecialtyService {
     public boolean deleteById(Long id) {
         try {
             specialtyRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean update(SpecialtyDto specialtyDto) {
+        try {
+            Specialty specialty = findOrThrow(specialtyDto.getId());
+            specialty.setName(specialtyDto.getName());
+            specialty.setPrice(specialtyDto.getPrice());
+            specialty.setDepartment(departmentService.findOrThrow(specialtyDto.getDepartmentId()));
+            specialtyRepository.save(specialty);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

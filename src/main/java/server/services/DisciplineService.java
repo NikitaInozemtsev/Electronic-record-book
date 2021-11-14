@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.dto.DisciplineDto;
 import server.exception.NotFoundResourceException;
-import server.models.Department;
 import server.models.Discipline;
 import server.repositories.DisciplineRepository;
 

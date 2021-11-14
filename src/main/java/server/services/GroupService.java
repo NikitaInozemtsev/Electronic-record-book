@@ -2,10 +2,8 @@ package server.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import server.dto.DisciplineDto;
 import server.dto.GroupDto;
 import server.exception.NotFoundResourceException;
-import server.models.Discipline;
 import server.models.Group;
 import server.repositories.GroupRepository;
 

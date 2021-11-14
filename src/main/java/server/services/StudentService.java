@@ -2,9 +2,10 @@ package server.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import server.dto.SpecialtyDto;
 import server.dto.StudentDto;
 import server.exception.NotFoundResourceException;
-import server.models.Discipline;
+import server.models.Specialty;
 import server.models.Student;
 import server.repositories.StudentRepository;
 
@@ -49,6 +50,22 @@ public class StudentService {
     public boolean deleteById(Long id) {
         try {
             studentRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean update(StudentDto studentDto) {
+        try {
+            Student student = findOrThrow(studentDto.getId());
+            student.setName(studentDto.getName());
+            student.setSurname(studentDto.getSurname());
+            student.setPatronymic(studentDto.getPatronymic());
+            student.setDateOfBirth(studentDto.getDateOfBirth());
+            student.setGroup(groupService.findOrThrow(studentDto.getGroupId()));
+            studentRepository.save(student);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

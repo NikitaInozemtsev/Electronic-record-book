@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.dto.ProfessorDto;
 import server.exception.NotFoundResourceException;
-import server.models.Discipline;
 import server.models.Professor;
 import server.repositories.ProfessorRepository;
 
@@ -49,6 +48,22 @@ public class ProfessorService {
     public boolean deleteById(Long id) {
         try {
             professorRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean update(ProfessorDto professorDto) {
+        try {
+            Professor professor = findOrThrow(professorDto.getId());
+            professor.setName(professorDto.getName());
+            professor.setSurname(professorDto.getSurname());
+            professor.setPatronymic(professorDto.getPatronymic());
+            professor.setPost(professorDto.getPost());
+            professor.setDepartment(departmentService.findOrThrow(professorDto.getDepartmentId()));
+            professorRepository.save(professor);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
