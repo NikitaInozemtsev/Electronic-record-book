@@ -15,6 +15,7 @@ import server.repositories.DepartmentRepository;
 import server.repositories.DisciplineRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -81,7 +82,7 @@ public class DisciplineServiceTest extends BaseDbTestClass {
                 .name("Какая-то дисциплина")
                 .department(departmentRepository.findById(1L).get())
                 .build();
-        Assertions.assertTrue(disciplineService.createDiscipline(dto));
+        Assertions.assertEquals(disciplineService.createDiscipline(dto), Optional.empty());
         Assertions.assertEquals(disciplineRepository.findById(1L).get(), discipline);
     }
 
@@ -93,8 +94,9 @@ public class DisciplineServiceTest extends BaseDbTestClass {
                         .department(departmentRepository.findById(1L).get())
                         .build());
 
-        Assertions.assertFalse(disciplineService.deleteById(2L));
-        Assertions.assertTrue(disciplineService.deleteById(1L));
+        Assertions.assertEquals(disciplineService.deleteById(2L).get().getMessage(),
+                "No class server.models.Discipline entity with id 2 exists!");
+        Assertions.assertEquals(disciplineService.deleteById(1L), Optional.empty());
 
         Assertions.assertEquals(disciplineRepository.findAll(), List.of());
     }
@@ -114,7 +116,7 @@ public class DisciplineServiceTest extends BaseDbTestClass {
                         .department(departmentRepository.findById(2L).get())
                         .build();
 
-        Assertions.assertTrue(disciplineService.update(disciplineDto));
+        Assertions.assertEquals(disciplineService.update(disciplineDto), Optional.empty());
         Assertions.assertEquals(disciplineRepository.findAll().size(), 1);
         Assertions.assertEquals(disciplineRepository.findById(1L).get(), newDiscipline);
     }

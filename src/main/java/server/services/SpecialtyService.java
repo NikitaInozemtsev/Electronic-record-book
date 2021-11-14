@@ -8,6 +8,7 @@ import server.models.Specialty;
 import server.repositories.SpecialtyRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SpecialtyService {
@@ -28,7 +29,7 @@ public class SpecialtyService {
                 ));
     }
 
-    public boolean createSpecialty(SpecialtyDto specialtyDto) {
+    public Optional<Exception> createSpecialty(SpecialtyDto specialtyDto) {
         try {
             Specialty specialty = Specialty.builder()
                     .name(specialtyDto.getName())
@@ -36,34 +37,34 @@ public class SpecialtyService {
                     .department(departmentService.findOrThrow(specialtyDto.getDepartmentId()))
                     .build();
             specialtyRepository.save(specialty);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 
-    public boolean deleteById(Long id) {
+    public Optional<Exception> deleteById(Long id) {
         try {
             specialtyRepository.deleteById(id);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 
-    public boolean update(SpecialtyDto specialtyDto) {
+    public Optional<Exception> update(SpecialtyDto specialtyDto) {
         try {
             Specialty specialty = findOrThrow(specialtyDto.getId());
             specialty.setName(specialtyDto.getName());
             specialty.setPrice(specialtyDto.getPrice());
             specialty.setDepartment(departmentService.findOrThrow(specialtyDto.getDepartmentId()));
             specialtyRepository.save(specialty);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 }

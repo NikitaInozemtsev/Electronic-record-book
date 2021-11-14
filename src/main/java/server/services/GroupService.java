@@ -8,6 +8,7 @@ import server.models.Group;
 import server.repositories.GroupRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GroupService {
@@ -28,7 +29,7 @@ public class GroupService {
                 ));
     }
 
-    public boolean createGroup(GroupDto groupDto) {
+    public Optional<Exception> createGroup(GroupDto groupDto) {
         try {
             Group group = Group.builder()
                     .name(groupDto.getName())
@@ -36,34 +37,34 @@ public class GroupService {
                     .specialty(specialtyService.findOrThrow(groupDto.getSpecialtyId()))
                     .build();
             groupRepository.save(group);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 
-    public boolean deleteById(Long id) {
+    public Optional<Exception> deleteById(Long id) {
         try {
             groupRepository.deleteById(id);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 
-    public boolean update(GroupDto groupDto) {
+    public Optional<Exception> update(GroupDto groupDto) {
         try {
             Group groupFind = findOrThrow(groupDto.getId());
             groupFind.setName(groupDto.getName());
             groupFind.setCourse(groupDto.getCourse());
             groupFind.setSpecialty(specialtyService.findOrThrow(groupDto.getSpecialtyId()));
             groupRepository.save(groupFind);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 }

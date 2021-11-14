@@ -1,6 +1,8 @@
 package server.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import server.dto.AchievementDto;
@@ -14,9 +16,12 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AchievementService {
+    private static final Integer DEFAULT_PAGE_SIZE = 1;
+    private static final Integer FIRST_PAGE = 0;
     @Autowired
     private AchievementRepository achievementRepository;
 
@@ -29,11 +34,11 @@ public class AchievementService {
     @Autowired
     private StudentService studentService;
 
-    public List<Achievement> findAll(AchievementFilter filter) {
-        return achievementRepository.findAll(byFilter(filter));
+    public Page<Achievement> findAll(AchievementFilter filter, Pageable pageable) {
+        return achievementRepository.findAll(byFilter(filter), pageable);
     }
 
-    public boolean createAchievement(AchievementDto achievementDto) {
+    public Optional<Exception> createAchievement(AchievementDto achievementDto) {
 
         try {
             Achievement achievement = Achievement.builder()
@@ -46,20 +51,20 @@ public class AchievementService {
                     .date(achievementDto.getDate())
                     .build();
             achievementRepository.save(achievement);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 
-    public boolean deleteById(Long id) {
+    public Optional<Exception> deleteById(Long id) {
         try {
             achievementRepository.deleteById(id);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 

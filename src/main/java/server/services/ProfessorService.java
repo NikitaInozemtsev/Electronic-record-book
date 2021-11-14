@@ -8,6 +8,7 @@ import server.models.Professor;
 import server.repositories.ProfessorRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProfessorService {
@@ -28,7 +29,7 @@ public class ProfessorService {
                 ));
     }
 
-    public boolean createProfessor(ProfessorDto professorDto) {
+    public Optional<Exception> createProfessor(ProfessorDto professorDto) {
         try {
             Professor professor = Professor.builder()
                     .name(professorDto.getName())
@@ -38,24 +39,24 @@ public class ProfessorService {
                     .department(departmentService.findOrThrow(professorDto.getDepartmentId()))
                     .build();
             professorRepository.save(professor);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 
-    public boolean deleteById(Long id) {
+    public Optional<Exception> deleteById(Long id) {
         try {
             professorRepository.deleteById(id);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 
-    public boolean update(ProfessorDto professorDto) {
+    public Optional<Exception> update(ProfessorDto professorDto) {
         try {
             Professor professor = findOrThrow(professorDto.getId());
             professor.setName(professorDto.getName());
@@ -64,10 +65,10 @@ public class ProfessorService {
             professor.setPost(professorDto.getPost());
             professor.setDepartment(departmentService.findOrThrow(professorDto.getDepartmentId()));
             professorRepository.save(professor);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 }

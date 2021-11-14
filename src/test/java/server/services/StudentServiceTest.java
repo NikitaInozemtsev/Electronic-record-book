@@ -20,6 +20,7 @@ import server.repositories.StudentRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -121,7 +122,7 @@ public class StudentServiceTest extends BaseDbTestClass {
                 .patronymic("")
                 .group(groupRepository.findById(1L).get())
                 .build();
-        Assertions.assertTrue(studentService.createStudent(dto));
+        Assertions.assertEquals(studentService.createStudent(dto), Optional.empty());
         Assertions.assertEquals(studentRepository.findById(1L).get(), student);
     }
 
@@ -135,8 +136,9 @@ public class StudentServiceTest extends BaseDbTestClass {
                         .group(groupRepository.findById(1L).get())
                         .build());
 
-        Assertions.assertFalse(studentService.deleteById(2L));
-        Assertions.assertTrue(studentService.deleteById(1L));
+        Assertions.assertEquals(studentService.deleteById(2L).get().getMessage(),
+                "No class server.models.Student entity with id 2 exists!");
+        Assertions.assertEquals(studentService.deleteById(1L), Optional.empty());
 
         Assertions.assertEquals(studentRepository.findAll(), List.of());
     }
@@ -161,7 +163,7 @@ public class StudentServiceTest extends BaseDbTestClass {
                         .group(groupRepository.findById(2L).get())
                         .build();
 
-        Assertions.assertTrue(studentService.update(studentDto));
+        Assertions.assertEquals(studentService.update(studentDto), Optional.empty());
         Assertions.assertEquals(studentRepository.findAll().size(), 1);
         Assertions.assertEquals(studentRepository.findById(1L).get(), newStudent);
     }

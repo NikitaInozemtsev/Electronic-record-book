@@ -2,14 +2,13 @@ package server.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import server.dto.SpecialtyDto;
 import server.dto.StudentDto;
 import server.exception.NotFoundResourceException;
-import server.models.Specialty;
 import server.models.Student;
 import server.repositories.StudentRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -30,7 +29,7 @@ public class StudentService {
                 ));
     }
 
-    public boolean createStudent(StudentDto studentDto) {
+    public Optional<Exception> createStudent(StudentDto studentDto) {
         try {
             Student student = Student.builder()
                     .name(studentDto.getName())
@@ -40,24 +39,24 @@ public class StudentService {
                     .group(groupService.findOrThrow(studentDto.getGroupId()))
                     .build();
             studentRepository.save(student);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 
-    public boolean deleteById(Long id) {
+    public Optional<Exception> deleteById(Long id) {
         try {
             studentRepository.deleteById(id);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 
-    public boolean update(StudentDto studentDto) {
+    public Optional<Exception> update(StudentDto studentDto) {
         try {
             Student student = findOrThrow(studentDto.getId());
             student.setName(studentDto.getName());
@@ -66,10 +65,10 @@ public class StudentService {
             student.setDateOfBirth(studentDto.getDateOfBirth());
             student.setGroup(groupService.findOrThrow(studentDto.getGroupId()));
             studentRepository.save(student);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 }

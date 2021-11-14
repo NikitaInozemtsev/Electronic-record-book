@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
 import server.dto.AchievementDto;
 import server.filters.AchievementFilter;
@@ -20,6 +22,7 @@ import java.util.Optional;
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class AchievementServiceTest extends BaseDbTestClass {
+    private static final Pageable DEFAULT_PAGEABLE = PageRequest.of(0, 10);
 
     @Autowired
     private AchievementService service;
@@ -171,34 +174,35 @@ public class AchievementServiceTest extends BaseDbTestClass {
 
         AchievementFilter filter = new AchievementFilter();
 
-        Assertions.assertEquals(service.findAll(new AchievementFilter()).get(0).getId(), data.get(0).getId());
+        Assertions.assertEquals(service.findAll(new AchievementFilter(), DEFAULT_PAGEABLE).getContent().get(0).getId(),
+                data.get(0).getId());
 
         filter.setDateFrom(LocalDate.of(2021, 1, 17));
-        Assertions.assertEquals(service.findAll(filter), data.subList(1, 2));
+        Assertions.assertEquals(service.findAll(filter, DEFAULT_PAGEABLE).getContent(), data.subList(1, 2));
 
         filter.setDateFrom(LocalDate.of(2021, 1, 15));
         filter.setDateTo(LocalDate.of(2021, 1, 20));
-        Assertions.assertEquals(service.findAll(filter), data.subList(0, 2));
+        Assertions.assertEquals(service.findAll(filter, DEFAULT_PAGEABLE).getContent(), data.subList(0, 2));
 
         filter = new AchievementFilter();
         filter.setFormOfControlId(1L);
-        Assertions.assertEquals(service.findAll(filter), data.subList(0, 2));
+        Assertions.assertEquals(service.findAll(filter, DEFAULT_PAGEABLE).getContent(), data.subList(0, 2));
 
         filter = new AchievementFilter();
         filter.setStudentId(3L);
-        Assertions.assertEquals(service.findAll(filter), data.subList(2, 3));
+        Assertions.assertEquals(service.findAll(filter, DEFAULT_PAGEABLE).getContent(), data.subList(2, 3));
 
         filter = new AchievementFilter();
         filter.setGroupId(1L);
-        Assertions.assertEquals(service.findAll(filter), data.subList(0, 2));
+        Assertions.assertEquals(service.findAll(filter, DEFAULT_PAGEABLE).getContent(), data.subList(0, 2));
 
         filter = new AchievementFilter();
         filter.setProfessorId(2L);
-        Assertions.assertEquals(service.findAll(filter), data.subList(1, 3));
+        Assertions.assertEquals(service.findAll(filter, DEFAULT_PAGEABLE).getContent(), data.subList(1, 3));
 
         filter = new AchievementFilter();
         filter.setSemester(3);
-        Assertions.assertEquals(service.findAll(filter), data.subList(0, 2));
+        Assertions.assertEquals(service.findAll(filter, DEFAULT_PAGEABLE).getContent(), data.subList(0, 2));
 
         filter = new AchievementFilter();
         filter.setSemester(3);
@@ -207,7 +211,7 @@ public class AchievementServiceTest extends BaseDbTestClass {
         filter.setProfessorId(1L);
         filter.setGroupId(1L);
         filter.setDateFrom(LocalDate.of(2021, 1, 16));
-        Assertions.assertEquals(service.findAll(filter), data.subList(0, 1));
+        Assertions.assertEquals(service.findAll(filter, DEFAULT_PAGEABLE).getContent(), data.subList(0, 1));
     }
 
     @Test

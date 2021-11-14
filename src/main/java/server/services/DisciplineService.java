@@ -8,6 +8,7 @@ import server.models.Discipline;
 import server.repositories.DisciplineRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DisciplineService {
@@ -28,40 +29,40 @@ public class DisciplineService {
     }
 
 
-    public boolean createDiscipline(DisciplineDto disciplineDto) {
+    public Optional<Exception> createDiscipline(DisciplineDto disciplineDto) {
         try {
             Discipline discipline = Discipline.builder()
                     .name(disciplineDto.getName())
                     .department(departmentService.findOrThrow(disciplineDto.getDepartmentId()))
                     .build();
             disciplineRepository.save(discipline);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 
-    public boolean deleteById(Long id) {
+    public Optional<Exception> deleteById(Long id) {
         try {
             disciplineRepository.deleteById(id);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 
-    public boolean update(DisciplineDto disciplineDto) {
+    public Optional<Exception> update(DisciplineDto disciplineDto) {
         try {
             Discipline disciplineFind = findOrThrow(disciplineDto.getId());
             disciplineFind.setName(disciplineDto.getName());
             disciplineFind.setDepartment(departmentService.findOrThrow(disciplineDto.getDepartmentId()));
             disciplineRepository.save(disciplineFind);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 }

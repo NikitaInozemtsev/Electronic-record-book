@@ -17,6 +17,7 @@ import server.repositories.GroupRepository;
 import server.repositories.SpecialtyRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -100,7 +101,7 @@ public class GroupServiceTest extends BaseDbTestClass {
                 .course(1)
                 .specialty(specialtyRepository.findById(1L).get())
                 .build();
-        Assertions.assertTrue(groupService.createGroup(dto));
+        Assertions.assertEquals(groupService.createGroup(dto), Optional.empty());
         Assertions.assertEquals(groupRepository.findById(1L).get(), group);
     }
 
@@ -113,8 +114,9 @@ public class GroupServiceTest extends BaseDbTestClass {
                         .specialty(specialtyRepository.findById(1L).get())
                         .build());
 
-        Assertions.assertFalse(groupService.deleteById(2L));
-        Assertions.assertTrue(groupService.deleteById(1L));
+        Assertions.assertEquals(groupService.deleteById(2L).get().getMessage(),
+                "No class server.models.Group entity with id 2 exists!");
+        Assertions.assertEquals(groupService.deleteById(1L), Optional.empty());
 
         Assertions.assertEquals(groupRepository.findAll(), List.of());
     }
@@ -136,7 +138,7 @@ public class GroupServiceTest extends BaseDbTestClass {
                         .specialty(specialtyRepository.findById(2L).get())
                         .build();
 
-        Assertions.assertTrue(groupService.update(groupDto));
+        Assertions.assertEquals(groupService.update(groupDto), Optional.empty());
         Assertions.assertEquals(groupRepository.findAll().size(), 1);
         Assertions.assertEquals(groupRepository.findById(1L).get(), newGroup);
     }

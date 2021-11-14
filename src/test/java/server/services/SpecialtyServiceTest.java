@@ -15,6 +15,7 @@ import server.repositories.DepartmentRepository;
 import server.repositories.SpecialtyRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -86,7 +87,7 @@ public class SpecialtyServiceTest extends BaseDbTestClass {
                         .price(228)
                         .department(departmentRepository.findById(1L).get())
                         .build();
-        Assertions.assertTrue(specialtyService.createSpecialty(dto));
+        Assertions.assertEquals(specialtyService.createSpecialty(dto), Optional.empty());
         Assertions.assertEquals(specialtyRepository.findById(1L).get(), specialty);
     }
 
@@ -99,8 +100,9 @@ public class SpecialtyServiceTest extends BaseDbTestClass {
                         .department(departmentRepository.findById(1L).get())
                         .build());
 
-        Assertions.assertFalse(specialtyService.deleteById(2L));
-        Assertions.assertTrue(specialtyService.deleteById(1L));
+        Assertions.assertEquals(specialtyService.deleteById(2L).get().getMessage(),
+                "No class server.models.Specialty entity with id 2 exists!");
+        Assertions.assertEquals(specialtyService.deleteById(1L), Optional.empty());
 
         Assertions.assertEquals(specialtyRepository.findAll(), List.of());
     }
@@ -122,7 +124,7 @@ public class SpecialtyServiceTest extends BaseDbTestClass {
                         .department(departmentRepository.findById(2L).get())
                         .build();
 
-        Assertions.assertTrue(specialtyService.update(professorDto));
+        Assertions.assertEquals(specialtyService.update(professorDto), Optional.empty());
         Assertions.assertEquals(specialtyRepository.findAll().size(), 1);
         Assertions.assertEquals(specialtyRepository.findById(1L).get(), newSpecialty);
     }

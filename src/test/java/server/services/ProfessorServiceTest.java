@@ -15,6 +15,7 @@ import server.repositories.DepartmentRepository;
 import server.repositories.ProfessorRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -91,7 +92,7 @@ public class ProfessorServiceTest extends BaseDbTestClass {
                         .post("Какая-то должность")
                         .department(departmentRepository.findById(1L).get())
                         .build();
-        Assertions.assertTrue(professorService.createProfessor(dto));
+        Assertions.assertEquals(professorService.createProfessor(dto), Optional.empty());
         Assertions.assertEquals(professorRepository.findById(1L).get(), professor);
     }
 
@@ -105,8 +106,9 @@ public class ProfessorServiceTest extends BaseDbTestClass {
                         .department(departmentRepository.findById(1L).get())
                         .build());
 
-        Assertions.assertFalse(professorService.deleteById(2L));
-        Assertions.assertTrue(professorService.deleteById(1L));
+        Assertions.assertEquals(professorService.deleteById(2L).get().getMessage(),
+                "No class server.models.Professor entity with id 2 exists!");
+        Assertions.assertEquals(professorService.deleteById(1L), Optional.empty());
 
         Assertions.assertEquals(professorRepository.findAll(), List.of());
     }
@@ -131,7 +133,7 @@ public class ProfessorServiceTest extends BaseDbTestClass {
                         .department(departmentRepository.findById(2L).get())
                         .build();
 
-        Assertions.assertTrue(professorService.update(professorDto));
+        Assertions.assertEquals(professorService.update(professorDto), Optional.empty());
         Assertions.assertEquals(professorRepository.findAll().size(), 1);
         Assertions.assertEquals(professorRepository.findById(1L).get(), newProfessor);
     }

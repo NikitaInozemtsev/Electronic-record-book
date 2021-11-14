@@ -7,6 +7,7 @@ import server.models.Department;
 import server.repositories.DepartmentRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DepartmentService {
@@ -24,37 +25,37 @@ public class DepartmentService {
                 ));
     }
 
-    public boolean createDepartment(Department department) {
+    public Optional<Exception> createDepartment(Department department) {
         try {
             departmentRepository.save(department);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 
-    public boolean deleteById(Long id) {
+    public Optional<Exception> deleteById(Long id) {
         try {
             departmentRepository.deleteById(id);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 
-    public boolean update(Department department) {
+    public Optional<Exception> update(Department department) {
         try {
             Department departmentFind = findOrThrow(department.getId());
             departmentFind.setName(department.getName());
             departmentFind.setPhoneNumber(department.getPhoneNumber());
             departmentFind.setHeadOfTheDepartment(department.getHeadOfTheDepartment());
             departmentRepository.save(departmentFind);
-            return true;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Optional.of(e);
         }
     }
 

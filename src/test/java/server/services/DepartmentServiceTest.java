@@ -11,6 +11,7 @@ import server.models.Department;
 import server.repositories.DepartmentRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -62,7 +63,7 @@ public class DepartmentServiceTest extends BaseDbTestClass {
                 .headOfTheDepartment("Some text")
                 .phoneNumber("12344321")
                 .build();
-        Assertions.assertTrue(departmentService.createDepartment(department));
+        Assertions.assertEquals(departmentService.createDepartment(department), Optional.empty());
         Assertions.assertEquals(departmentRepository.findById(1L).get(), department);
     }
 
@@ -75,8 +76,9 @@ public class DepartmentServiceTest extends BaseDbTestClass {
                         .phoneNumber("12344321")
                         .build());
 
-        Assertions.assertFalse(departmentService.deleteById(2L));
-        Assertions.assertTrue(departmentService.deleteById(1L));
+        Assertions.assertEquals(departmentService.deleteById(2L).get().getMessage(),
+                "No class server.models.Department entity with id 2 exists!");
+        Assertions.assertEquals(departmentService.deleteById(1L), Optional.empty());
 
         Assertions.assertEquals(departmentRepository.findAll(), List.of());
     }
@@ -96,7 +98,7 @@ public class DepartmentServiceTest extends BaseDbTestClass {
                 .phoneNumber("092396")
                 .build();
 
-        Assertions.assertTrue(departmentService.update(newDepartment));
+        Assertions.assertEquals(departmentService.update(newDepartment), Optional.empty());
         Assertions.assertEquals(departmentRepository.findAll().size(), 1);
         Assertions.assertEquals(departmentRepository.findById(1L).get(), newDepartment);
     }
