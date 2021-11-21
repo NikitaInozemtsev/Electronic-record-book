@@ -1,6 +1,8 @@
 package server.models;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -26,5 +28,6 @@ public class Group {
     private int course;
 
     @ManyToOne(targetEntity = Specialty.class)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Specialty specialty;
 }

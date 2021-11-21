@@ -1,6 +1,8 @@
 package server.models;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -21,15 +23,19 @@ public class Achievement {
     private long id;
 
     @ManyToOne(targetEntity = Student.class)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Student student;
 
     @ManyToOne(targetEntity = Professor.class)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Professor professor;
 
     @ManyToOne(targetEntity = FormOfControl.class)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private FormOfControl formOfControl;
 
     @ManyToOne(targetEntity = Discipline.class)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Discipline discipline;
 
     @Column(name = "mark")

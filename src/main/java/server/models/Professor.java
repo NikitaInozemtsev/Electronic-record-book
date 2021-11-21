@@ -1,6 +1,8 @@
 package server.models;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -32,6 +34,7 @@ public class Professor {
     private String post;
 
     @ManyToOne(targetEntity = Department.class)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Department department;
 
 }

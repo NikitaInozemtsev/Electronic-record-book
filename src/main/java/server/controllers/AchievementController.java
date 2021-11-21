@@ -33,23 +33,21 @@ public class AchievementController {
     public ResponseEntity<Map<String, Object>> list(AchievementFilter filter,
                                                     @RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "5") int size,
-                                                    //pattern for sort FieldName:SortingType(asc, desc) example : id:asc
+                                                    //pattern for sort FieldName,FieldName...FieldName:SortingType(asc, desc) example : id,name:asc
                                                     @RequestParam(required = false) String sort) {
         Pageable paging;
         if (sort != null) {
             String[] sorts = sort.split(":");
-            String sortField = sorts[0];
+            String[] sortFields = sorts[0].split(",");
             String sortType = sorts[1];
-            paging = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortType), sortField));
-        }
-        else  {
+            paging = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortType), sortFields));
+        } else {
             paging = PageRequest.of(page, size);
         }
         Page<Achievement> pageAchievements = service.findAll(filter, paging);
 
         Map<String, Object> response = new HashMap<>();
         response.put("achievements", pageAchievements.getContent());
-        response.put("currentPage", pageAchievements.getNumber());
         response.put("totalItems", pageAchievements.getTotalElements());
         response.put("totalPages", pageAchievements.getTotalPages());
 
