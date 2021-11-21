@@ -9,6 +9,10 @@ import TableHead from '@mui/material/TableHead';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 
 class StudentList extends Component {
@@ -60,7 +64,13 @@ class StudentList extends Component {
                 <TableCell >{student.group.name}</TableCell>
                 <TableCell >{student.group.course}</TableCell>
                 <TableCell >{student.group.specialty.name}</TableCell>
-                <TableCell><Button variant="contained" color="error" onClick={() => this.remove(student.id)}>Delete</Button></TableCell>
+                <TableCell>
+                <ButtonGroup variant="text" aria-label="text button group">
+                    
+                    <Button color="primary"  href={"/api/students/" + student.id}>Edit</Button>
+                    <Button color="error" onClick={() => this.remove(student.id)}>Delete</Button>
+                </ButtonGroup>
+                    </TableCell>
                 </TableRow>
             );
         });
@@ -69,6 +79,11 @@ class StudentList extends Component {
             
             <div>
                 <AppNavbar/>
+                <h3>Студенты <Tooltip  title="Create new Student">
+                    <IconButton color="info" href="/api/students/new">
+                        <AddRoundedIcon />
+                    </IconButton>
+                </Tooltip></h3>
                 <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>

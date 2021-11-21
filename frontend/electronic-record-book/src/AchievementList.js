@@ -17,13 +17,13 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { alpha } from '@mui/material/styles';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import TextField from '@mui/material/TextField';
 import { format } from "date-fns";
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
 
 class AchievementList extends Component {
 
@@ -388,9 +388,9 @@ class AchievementList extends Component {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
+        <Tooltip title="Create new Achievement">
+          <IconButton color="info" href="/api/achievements/new">
+            <AddRoundedIcon />
           </IconButton>
         </Tooltip>
       )}
