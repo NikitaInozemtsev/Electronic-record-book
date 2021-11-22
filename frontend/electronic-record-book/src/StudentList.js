@@ -56,8 +56,9 @@ class StudentList extends Component {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                 <TableCell component="th" scope="row">
-                    {student.surname}
+                    {student.id}
                 </TableCell>
+                <TableCell >{student.surname}</TableCell>
                 <TableCell >{student.name}</TableCell>
                 <TableCell >{student.patronymic}</TableCell>
                 <TableCell >{student.dateOfBirth}</TableCell>
@@ -88,6 +89,8 @@ class StudentList extends Component {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                     <TableRow>
+                    <TableCell>Id</TableCell>
+
                         <TableCell>Фамилия студента</TableCell>
                         <TableCell>Имя</TableCell>
                         <TableCell>Отчество</TableCell>
@@ -95,7 +98,7 @@ class StudentList extends Component {
                         <TableCell>Группа</TableCell>
                         <TableCell>Курс</TableCell>
                         <TableCell>Специальность</TableCell>
-                        <TableCell></TableCell>
+                        <TableCell>Действия</TableCell>
 
                     </TableRow>
                     </TableHead>

@@ -55,8 +55,9 @@ class GroupList extends Component {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                 <TableCell component="th" scope="row">
-                    {group.name}
+                    {group.id}
                 </TableCell>
+                <TableCell >{group.name}</TableCell>
                 <TableCell >{group.course}</TableCell>
                 <TableCell >{group.specialty.name}</TableCell>
                 <TableCell>
@@ -83,10 +84,13 @@ class GroupList extends Component {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                     <TableRow>
+                    <TableCell>Id</TableCell>
+
                         <TableCell>Имя группы</TableCell>
                         <TableCell>Курс</TableCell>
                         <TableCell>Название специальности</TableCell>
-                        <TableCell></TableCell>
+                        <TableCell>Действия</TableCell>
+
                     </TableRow>
                     </TableHead>
                     <TableBody>

@@ -38,6 +38,9 @@ class FormOfControlList extends Component {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                 <TableCell component="th" scope="row">
+                    {formOfControl.id}
+                </TableCell>
+                <TableCell>
                     {formOfControl.name}
                 </TableCell>
                </TableRow>
@@ -52,6 +55,7 @@ class FormOfControlList extends Component {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                     <TableRow>
+                        <TableCell>Id</TableCell>
                         <TableCell>Форма контроля</TableCell>
                     </TableRow>
                     </TableHead>

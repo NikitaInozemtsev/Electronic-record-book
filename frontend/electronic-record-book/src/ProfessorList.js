@@ -56,8 +56,9 @@ class ProfessorList extends Component {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                 <TableCell component="th" scope="row">
-                    {professor.name}
+                    {professor.id}
                 </TableCell>
+                <TableCell >{professor.name}</TableCell>
                 <TableCell >{professor.surname}</TableCell>
                 <TableCell >{professor.patronymic}</TableCell>
                 <TableCell >{professor.post}</TableCell>
@@ -86,13 +87,15 @@ class ProfessorList extends Component {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                     <TableRow>
+                    <TableCell>Id</TableCell>
+
                         <TableCell>Фамилия преподавателя</TableCell>
                         <TableCell>Имя</TableCell>
                         <TableCell>Отчество</TableCell>
                         <TableCell>Должность</TableCell>
                         <TableCell>Имя кафедры</TableCell>
-                        <TableCell></TableCell>
-
+                        <TableCell>Действия</TableCell>
+                        
                     </TableRow>
                     </TableHead>
                     <TableBody>

@@ -329,7 +329,7 @@ class AchievementList extends Component {
                 <AppNavbar/>
                 
                 <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mt: 2 }}>
+      <Paper sx={{ width: '100%', mb: 2 }}>
       <Toolbar
       sx={{
         pl: { sm: 2 },
@@ -490,7 +490,7 @@ class AchievementList extends Component {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
+        <TablePagination 
           rowsPerPageOptions={this.pageSizes}
           component="div"
           count={this.state.totalItems}

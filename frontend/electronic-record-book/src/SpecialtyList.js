@@ -55,8 +55,9 @@ class SpecialtyList extends Component {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                 <TableCell component="th" scope="row">
-                    {specialty.name}
+                    {specialty.id}
                 </TableCell>
+                <TableCell >{specialty.name}</TableCell>
                 <TableCell >{specialty.price}</TableCell>
                 <TableCell >{specialty.department.name}</TableCell>
                 <TableCell >{specialty.department.phoneNumber}</TableCell>
@@ -86,12 +87,15 @@ class SpecialtyList extends Component {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                     <TableRow>
+                    <TableCell>Id</TableCell>
+
                         <TableCell>Название специальности</TableCell>
                         <TableCell>Цена (руб. в год)</TableCell>
                         <TableCell>Название кафедры</TableCell>
                         <TableCell>Номер телефона кафедры</TableCell>
                         <TableCell>Директор кафедры</TableCell>
-                        <TableCell></TableCell>
+                        <TableCell>Действия</TableCell>
+                        
 
                     </TableRow>
                     </TableHead>

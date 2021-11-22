@@ -56,8 +56,9 @@ class DisciplineList extends Component {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                 <TableCell component="th" scope="row">
-                    {discipline.name}
+                    {discipline.id}
                 </TableCell>
+                <TableCell >{discipline.name}</TableCell>
                 <TableCell >{discipline.department.name}</TableCell>
                 <TableCell >{discipline.department.headOfTheDepartment}</TableCell>
                 <TableCell>
@@ -84,10 +85,12 @@ class DisciplineList extends Component {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                     <TableRow>
+                        <TableCell>Id</TableCell>
                         <TableCell>Имя дисциплины</TableCell>
                         <TableCell>Имя кафедры</TableCell>
                         <TableCell>Директор кафедры</TableCell>
                         <TableCell>Действия</TableCell>
+
                     </TableRow>
                     </TableHead>
                     <TableBody>
