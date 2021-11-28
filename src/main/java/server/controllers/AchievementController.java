@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(value = "api/achievements")
+@RequestMapping(value = "api/${version.api}/achievements")
 public class AchievementController {
     @Autowired
     private AchievementService service;

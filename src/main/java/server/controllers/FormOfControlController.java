@@ -14,7 +14,7 @@ import server.services.FormOfControlService;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "api/form-of-controls")
+@RequestMapping(value = "api/${version.api}/form-of-controls")
 public class FormOfControlController {
     @Autowired
     private FormOfControlService service;

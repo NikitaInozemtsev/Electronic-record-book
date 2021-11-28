@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(value = "api/specialties")
+@RequestMapping(value = "api/${version.api}/specialties")
 public class SpecialtyController {
     @Autowired
     private SpecialtyService service;

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(value = "api/disciplines")
+@RequestMapping(value = "api/${version.api}/disciplines")
 public class DisciplineController {
     @Autowired
     private DisciplineService service;

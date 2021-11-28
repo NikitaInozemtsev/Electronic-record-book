@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(value = "api/departments")
+@RequestMapping(value = "api/${version.api}/departments")
 public class DepartmentController {
     @Autowired
     private DepartmentService service;

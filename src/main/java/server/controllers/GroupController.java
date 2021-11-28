@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(value = "api/groups")
+@RequestMapping(value = "api/${version.api}/groups")
 public class GroupController {
     @Autowired
     private GroupService service;

@@ -128,8 +128,11 @@
             <version>${junit-engine.version}</version>
         </dependency>
 
-
-
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
 
 
     </dependencies>
