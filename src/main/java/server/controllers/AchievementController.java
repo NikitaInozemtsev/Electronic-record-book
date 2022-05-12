@@ -24,7 +24,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(value = "api/${version.api}/achievements")
+@RequestMapping(value = "api/achievements")
+@CrossOrigin(origins = {"https://electronic-record-book.herokuapp.com", "http://localhost:3000"})
 public class AchievementController {
     @Autowired
     private AchievementService service;

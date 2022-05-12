@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(value = "api/${version.api}/groups")
+@RequestMapping(value = "api/groups")
+@CrossOrigin(origins = {"https://electronic-record-book.herokuapp.com", "http://localhost:3000"})
 public class GroupController {
     @Autowired
     private GroupService service;

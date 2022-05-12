@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(value = "api/${version.api}/professors")
+@RequestMapping(value = "api/professors")
+@CrossOrigin(origins = {"https://electronic-record-book.herokuapp.com", "http://localhost:3000"})
 public class ProfessorController {
     @Autowired
     private ProfessorService service;
