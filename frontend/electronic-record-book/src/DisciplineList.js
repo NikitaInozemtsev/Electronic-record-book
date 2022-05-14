@@ -29,16 +29,13 @@ class DisciplineList extends Component {
         })
     }
 
-    async remove(id) {
-        await fetch(`/api/disciplines/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(() => {
+    remove(id) {
+        axios.delete(`/api/disciplines/${id}`).then(res => {
             let updated = [...this.state.disciplines].filter(i => i.id !== id);
             this.setState({disciplines: updated});
+        })
+        .catch(err => {
+            console.log(err);
         });
     }
 
@@ -64,7 +61,7 @@ class DisciplineList extends Component {
                 <TableCell>
                 <ButtonGroup variant="text" aria-label="text button group">
                     
-                    <Button color="primary"  href={"/api/disciplines/" + discipline.id}>Edit</Button>
+                    <Button color="primary"  href={"/disciplines/" + discipline.id}>Edit</Button>
                     <Button color="error" onClick={() => this.remove(discipline.id)}>Delete</Button>
                 </ButtonGroup>
                     </TableCell>
@@ -77,7 +74,7 @@ class DisciplineList extends Component {
             <div>
                 <AppNavbar/>
                 <h3>Дисциплины <Tooltip  title="Create new Discipline">
-                    <IconButton color="info" href="/api/disciplines/new">
+                    <IconButton color="info" href="/disciplines/new">
                         <AddRoundedIcon />
                     </IconButton>
                 </Tooltip></h3>

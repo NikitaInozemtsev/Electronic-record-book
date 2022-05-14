@@ -11,14 +11,14 @@ class Home extends Component {
             <div>
                 <AppNavbar/>
                 <ButtonGroup className="mt-2" variant="text" aria-label="text button group">
-                    <Button  href="/api/students">Студенты</Button>
-                    <Button  href="/api/form-of-controls">Форма контроля</Button>
-                    <Button  href="/api/specialties">Специальности</Button>
-                    <Button  href="/api/professors">Преподаватели</Button>
-                    <Button  href="/api/groups">Группы</Button>
-                    <Button  href="/api/disciplines">Дисциплины</Button>
-                    <Button  href="/api/departments">Кафедры</Button>
-                    <Button  href="/api/achievements">Достижения</Button>
+                    <Button  href="/students">Студенты</Button>
+                    <Button  href="/form-of-controls">Форма контроля</Button>
+                    <Button  href="/specialties">Специальности</Button>
+                    <Button  href="/professors">Преподаватели</Button>
+                    <Button  href="/groups">Группы</Button>
+                    <Button  href="/disciplines">Дисциплины</Button>
+                    <Button  href="/departments">Кафедры</Button>
+                    <Button  href="/achievements">Достижения</Button>
                 </ButtonGroup>
             </div>
         );

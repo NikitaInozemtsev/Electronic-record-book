@@ -29,16 +29,13 @@ class ProfessorList extends Component {
         })
     }
 
-    async remove(id) {
-        await fetch(`/api/professors/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(() => {
+    remove(id) {
+        axios.delete(`/api/professors/${id}`).then(res => {
             let updated = [...this.state.professors].filter(i => i.id !== id);
             this.setState({professors: updated});
+        })
+        .catch(err => {
+            console.log(err);
         });
     }
 
@@ -66,7 +63,7 @@ class ProfessorList extends Component {
                 <TableCell>
                 <ButtonGroup variant="text" aria-label="text button group">
                     
-                    <Button color="primary"  href={"/api/professors/" + professor.id}>Edit</Button>
+                    <Button color="primary"  href={"/professors/" + professor.id}>Edit</Button>
                     <Button color="error" onClick={() => this.remove(professor.id)}>Delete</Button>
                 </ButtonGroup>
                 </TableCell>
@@ -79,7 +76,7 @@ class ProfessorList extends Component {
             <div>
                 <AppNavbar/>
                 <h3>Преподаватели <Tooltip  title="Create new Professor">
-                    <IconButton color="info" href="/api/professors/new">
+                    <IconButton color="info" href="/professors/new">
                         <AddRoundedIcon />
                     </IconButton>
                 </Tooltip></h3>

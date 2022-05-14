@@ -29,16 +29,13 @@ class StudentList extends Component {
         })
     }
 
-    async remove(id) {
-        await fetch(`/api/students/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(() => {
+    remove(id) {
+        axios.delete(`/api/students/${id}`).then(res => {
             let updated = [...this.state.students].filter(i => i.id !== id);
-            this.setState({student: updated});
+            this.setState({students: updated});
+        })
+        .catch(err => {
+            console.log(err);
         });
     }
 
@@ -68,7 +65,7 @@ class StudentList extends Component {
                 <TableCell>
                 <ButtonGroup variant="text" aria-label="text button group">
                     
-                    <Button color="primary"  href={"/api/students/" + student.id}>Edit</Button>
+                    <Button color="primary"  href={"/students/" + student.id}>Edit</Button>
                     <Button color="error" onClick={() => this.remove(student.id)}>Delete</Button>
                 </ButtonGroup>
                     </TableCell>
@@ -81,7 +78,7 @@ class StudentList extends Component {
             <div>
                 <AppNavbar/>
                 <h3>Студенты <Tooltip  title="Create new Student">
-                    <IconButton color="info" href="/api/students/new">
+                    <IconButton color="info" href="/students/new">
                         <AddRoundedIcon />
                     </IconButton>
                 </Tooltip></h3>

@@ -3,10 +3,14 @@ import { withRouter } from 'react-router-dom';
 import { Container, Form, FormGroup } from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import axios from 'axios';
-import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import TextField from '@mui/material/TextField';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { format } from "date-fns";
 
 class StudentEdit extends Component {
 
@@ -15,7 +19,7 @@ class StudentEdit extends Component {
         name: '',
         surname: '',
         patronymic: '',
-        dateOfBirth: '',
+        dateOfBirth: new Date(2000, 1, 1),
         groupId: ''
     };
 
@@ -41,7 +45,7 @@ class StudentEdit extends Component {
                     name: res.data.name,
                     surname: res.data.surname,
                     patronymic: res.data.patronymic,
-                    dateOfBirth: res.data.dateOfBirth,
+                    dateOfBirth: new Date(res.data.dateOfBirth),
                     groupId: res.data.group.id
                 }
                 this.setState({item: temp});
@@ -51,7 +55,11 @@ class StudentEdit extends Component {
 
     handleChange(event) {
         const target = event.target;
-        const value = target.value;
+        var value = target.value;
+        console.log(event.target.type)
+        if (event.target.type == 'number') {
+            value = parseInt(value);
+        }
         const name = target.name;
         let item = {...this.state.item};
         item[name] = value;
@@ -59,10 +67,15 @@ class StudentEdit extends Component {
     }
 
     async handleSubmit(event) {
+        this.setState({
+            open: false,
+            ok: false,
+            err: ''
+        });
         event.preventDefault();
         let {item} = this.state;
-        const date = item.dateOfBirth.split('-');
-        item.dateOfBirth = date[2] + '.' + date[1] + '.' + date[0];
+        var date = item.dateOfBirth;
+        item.dateOfBirth = format(date, "dd.MM.yyyy");
 
         
         axios.request({
@@ -75,7 +88,6 @@ class StudentEdit extends Component {
             data: JSON.stringify(item),
         })
         .then(res => {
-            console.log(res);
             this.setState({
             ok: true
             })
@@ -87,6 +99,7 @@ class StudentEdit extends Component {
                 })
 
         );
+        item.dateOfBirth = date;
     }
 
     handleClose = (event, reason) => {
@@ -126,28 +139,47 @@ class StudentEdit extends Component {
                 {title}
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
-                        <Input required='true' type="text" name="name" id="name" placeholder="Имя студента" value={item.name || ''}
+                        <TextField required={true} type="text" margin="dense" name="name" id="name" variant='standard' label="Имя студента" value={item.name || ''}
+                               onChange={this.handleChange}/>
+                    </FormGroup>
+                    <FormGroup>
+                        <TextField required={true} type="text" margin="dense" name="surname" id="surname" variant='standard' label="Фамилия студента" value={item.surname || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="text" name="surname" id="surname" placeholder="Фамилия студента" value={item.surname || ''}
+                        <TextField required={true} type="text" margin="dense" name="patronymic" id="patronymic" variant='standard' label="Отчество студента" value={item.patronymic || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="text" name="patronymic" id="patronymic" placeholder="Отчество студента" value={item.patronymic || ''}
-                               onChange={this.handleChange} />
+
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker 
+                        allowSameDateSelection={true}
+                        inputFormat="dd.MM.yyyy"
+                        views={['year', 'month', 'day']}
+                        mask='__.__.____'
+                        showDaysOutsideCurrentMonth={true}
+                        value={item.dateOfBirth || new Date(2000, 1, 1)}
+                        maxDate={new Date()}
+                        onChange={(newValue) => {
+                            let item = {...this.state.item};
+                            item['dateOfBirth'] = newValue;
+                            this.setState({item});
+                          }}
+                        renderInput={(params) => <TextField {...params} required={true} type="date" margin="dense" name="dateOfBirth" id="dateOfBirth" variant='standard' label="Дата рождения" />}
+                    />
+
+                    </LocalizationProvider>
+                    
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="date" name="dateOfBirth" id="dateOfBirth" placeholder="Дата рождения" value={item.dateOfBirth || ''}
-                               onChange={this.handleChange} />
-                    </FormGroup>
-                    <FormGroup>
-                        <Input required='true'  type="number" name="groupId" id="groupId" placeholder="Id группы" value={item.groupId || ''}
+                        
+                        <TextField required={true}  type="number" margin="dense" name="groupId" id="groupId" variant='standard' label="Id группы" value={item.groupId || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup className="mt-2">
                         <Button variant="contained" color="success" type="submit">Сохранить</Button>{' '}
-                        <Button variant="contained" color="error" href="/api/students">Назад</Button>
+                        <Button variant="contained" color="error" href="/students">Назад</Button>
                     </FormGroup>
                 </Form>
             </Container>

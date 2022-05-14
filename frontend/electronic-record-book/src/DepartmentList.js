@@ -28,16 +28,13 @@ class DepartmentList extends Component {
         })
     }
 
-    async remove(id) {
-        await fetch(`/api/departments/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(() => {
+    remove(id) {
+        axios.delete(`/api/departments/${id}`).then(res => {
             let updated = [...this.state.departments].filter(i => i.id !== id);
             this.setState({departments: updated});
+        })
+        .catch(err => {
+            console.log(err);
         });
     }
 
@@ -64,7 +61,7 @@ class DepartmentList extends Component {
                     
                     <ButtonGroup variant="text" aria-label="text button group">
                     
-                        <Button color="primary"  href={"/api/departments/" + department.id}>Edit</Button>
+                        <Button color="primary"  href={"/departments/" + department.id}>Edit</Button>
                         <Button color="error" onClick={() => this.remove(department.id)}>Delete</Button>
                     </ButtonGroup>
                     
@@ -79,7 +76,7 @@ class DepartmentList extends Component {
                 <AppNavbar/>
                 
                 <h3>Кафедры <Tooltip  title="Create new Department">
-                    <IconButton color="info" href="/api/departments/new">
+                    <IconButton color="info" href="/departments/new">
                         <AddRoundedIcon />
                     </IconButton>
                 </Tooltip></h3>

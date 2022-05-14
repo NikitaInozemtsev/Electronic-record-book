@@ -3,10 +3,10 @@ import { withRouter } from 'react-router-dom';
 import { Container, Form, FormGroup } from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import axios from 'axios';
-import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import TextField from '@mui/material/TextField';
 
 class ProfessorEdit extends Component {
 
@@ -51,7 +51,10 @@ class ProfessorEdit extends Component {
 
     handleChange(event) {
         const target = event.target;
-        const value = target.value;
+        var value = target.value;
+        if (event.target.type == 'number') {
+            value = parseInt(value);
+        }
         const name = target.name;
         let item = {...this.state.item};
         item[name] = value;
@@ -59,6 +62,11 @@ class ProfessorEdit extends Component {
     }
 
     async handleSubmit(event) {
+        this.setState({
+            open: false,
+            ok: false,
+            err: ''
+        });
         event.preventDefault();
         const {item} = this.state;
         
@@ -126,28 +134,28 @@ class ProfessorEdit extends Component {
                 {title}
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
-                        <Input required='true' type="text" name="name" id="name" placeholder="Имя преподавателя" value={item.name || ''}
+                        <TextField required={true} type="text" name="name" id="name" margin="dense" variant="standard" label="Имя преподавателя" value={item.name || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="text" name="surname" id="surname" placeholder="Фамилия преподавателя" value={item.surname || ''}
+                        <TextField required={true} type="text" name="surname" id="surname" margin="dense" variant="standard" label="Фамилия преподавателя" value={item.surname || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="text" name="patronymic" id="patronymic" placeholder="Отчество преподавателя" value={item.patronymic || ''}
+                        <TextField required={true} type="text" name="patronymic" id="patronymic" margin="dense" variant="standard" label="Отчество преподавателя" value={item.patronymic || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="text" name="post" id="post" placeholder="Должность" value={item.post || ''}
+                        <TextField required={true} type="text" name="post" id="post" margin="dense" variant="standard" label="Должность" value={item.post || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="number" name="departmentId" id="departmentId" placeholder="Id кафедры" value={item.departmentId || ''}
+                        <TextField required={true} type="number" name="departmentId" id="departmentId" margin="dense" variant="standard" label="Id кафедры" value={item.departmentId || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup className="mt-2">
                         <Button variant="contained" color="success" type="submit">Сохранить</Button>{' '}
-                        <Button variant="contained" color="error" href="/api/professors">Назад</Button>
+                        <Button variant="contained" color="error" href="/professors">Назад</Button>
                     </FormGroup>
                 </Form>
             </Container>

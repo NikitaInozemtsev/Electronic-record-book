@@ -374,7 +374,7 @@ class AchievementList extends Component {
         }
         renderInput={(startProps, endProps) => (
           <React.Fragment>
-            <TextField {...startProps} />
+            <TextField {...startProps} margin="normal" />
             <Box sx={{ mx: 2 }}> to </Box>
             <TextField {...endProps} />
           </React.Fragment>
@@ -389,7 +389,7 @@ class AchievementList extends Component {
         </Tooltip>
       ) : (
         <Tooltip title="Create new Achievement">
-          <IconButton color="info" href="/api/achievements/new">
+          <IconButton color="info" href="/achievements/new">
             <AddRoundedIcon />
           </IconButton>
         </Tooltip>

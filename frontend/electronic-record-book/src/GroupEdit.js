@@ -3,10 +3,10 @@ import { withRouter } from 'react-router-dom';
 import { Container, Form, FormGroup } from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import axios from 'axios';
-import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import TextField from '@mui/material/TextField';
 
 
 class GroupEdit extends Component {
@@ -48,7 +48,10 @@ class GroupEdit extends Component {
 
     handleChange(event) {
         const target = event.target;
-        const value = target.value;
+        var value = target.value;
+        if (event.target.type == 'number') {
+            value = parseInt(value);
+        }
         const name = target.name;
         let item = {...this.state.item};
         item[name] = value;
@@ -56,6 +59,11 @@ class GroupEdit extends Component {
     }
 
     async handleSubmit(event) {
+        this.setState({
+            open: false,
+            ok: false,
+            err: ''
+        });
         event.preventDefault();
         const {item} = this.state;
         
@@ -122,20 +130,20 @@ class GroupEdit extends Component {
                 {title}
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
-                        <Input required='true' type="text" name="name" id="name" placeholder="Имя группы" value={item.name || ''}
+                        <TextField required={true} type="text" name="name" id="name" margin="dense" variant="standard" label="Имя группы" value={item.name || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="number" name="course" id="course" placeholder="Курс" value={item.course || ''}
+                        <TextField required={true} type="number" name="course" id="course" margin="dense" variant="standard" label="Курс" value={item.course || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="number" name="specialtyId" id="specialtyId" placeholder="Id специальности" value={item.specialtyId || ''}
+                        <TextField required={true} type="number" name="specialtyId" id="specialtyId" margin="dense" variant="standard" label="Id специальности" value={item.specialtyId || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup className="mt-2">
                         <Button variant="contained" color="success" type="submit">Сохранить</Button>{' '}
-                        <Button variant="contained" color="error" href="/api/groups">Назад</Button>
+                        <Button variant="contained" color="error" href="/groups">Назад</Button>
                     </FormGroup>
                 </Form>
             </Container>

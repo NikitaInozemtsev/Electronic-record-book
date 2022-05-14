@@ -28,16 +28,13 @@ class SpecialtyList extends Component {
         })
     }
 
-    async remove(id) {
-        await fetch(`/api/specialties/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(() => {
+    remove(id) {
+        axios.delete(`/api/specialties/${id}`).then(res => {
             let updated = [...this.state.specialties].filter(i => i.id !== id);
             this.setState({specialties: updated});
+        })
+        .catch(err => {
+            console.log(err);
         });
     }
 
@@ -65,7 +62,7 @@ class SpecialtyList extends Component {
                 <TableCell>
                 <ButtonGroup variant="text" aria-label="text button group">
                     
-                    <Button color="primary"  href={"/api/specialties/" + specialty.id}>Edit</Button>
+                    <Button color="primary"  href={"/specialties/" + specialty.id}>Edit</Button>
                     <Button color="error" onClick={() => this.remove(specialty.id)}>Delete</Button>
                 </ButtonGroup>
                     
@@ -79,7 +76,7 @@ class SpecialtyList extends Component {
             <div>
                 <AppNavbar/>
                 <h3>Специальности <Tooltip  title="Create new Specialty">
-                    <IconButton color="info" href="/api/specialties/new">
+                    <IconButton color="info" href="/specialties/new">
                         <AddRoundedIcon />
                     </IconButton>
                 </Tooltip></h3>

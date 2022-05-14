@@ -28,16 +28,13 @@ class GroupList extends Component {
         })
     }
 
-    async remove(id) {
-        await fetch(`/api/groups/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(() => {
+    remove(id) {
+        axios.delete(`/api/groups/${id}`).then(res => {
             let updated = [...this.state.groups].filter(i => i.id !== id);
             this.setState({groups: updated});
+        })
+        .catch(err => {
+            console.log(err);
         });
     }
 
@@ -63,7 +60,7 @@ class GroupList extends Component {
                 <TableCell>
                 <ButtonGroup variant="text" aria-label="text button group">
                     
-                    <Button color="primary"  href={"/api/groups/" + group.id}>Edit</Button>
+                    <Button color="primary"  href={"/groups/" + group.id}>Edit</Button>
                     <Button color="error" onClick={() => this.remove(group.id)}>Delete</Button>
                 </ButtonGroup>
                 </TableCell>
@@ -76,7 +73,7 @@ class GroupList extends Component {
             <div>
                 <AppNavbar/>
                 <h3>Группы <Tooltip  title="Create new Group">
-                    <IconButton color="info" href="/api/groups/new">
+                    <IconButton color="info" href="/groups/new">
                         <AddRoundedIcon />
                     </IconButton>
                 </Tooltip></h3>

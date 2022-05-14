@@ -3,10 +3,10 @@ import { withRouter } from 'react-router-dom';
 import { Container, Form, FormGroup } from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import axios from 'axios';
-import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import TextField from '@mui/material/TextField';
 
 class DepartmentEdit extends Component {
 
@@ -49,6 +49,11 @@ class DepartmentEdit extends Component {
     }
 
     async handleSubmit(event) {
+        this.setState({
+            open: false,
+            ok: false,
+            err: ''
+        });
         event.preventDefault();
         const {item} = this.state;
         axios.request({
@@ -110,20 +115,20 @@ class DepartmentEdit extends Component {
                 {title}
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
-                        <Input required='true' type="text" name="name" id="name" placeholder="Имя кафедры" value={item.name || ''}
+                        <TextField required={true} type="text" name="name" id="name" margin="dense" variant="standard" label="Имя кафедры" value={item.name || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="text" name="phoneNumber" id="phoneNumber" placeholder="Номер телефона" value={item.phoneNumber || ''}
+                        <TextField required={true} type="text" name="phoneNumber" id="phoneNumber" margin="dense" variant="standard" label="Номер телефона" value={item.phoneNumber || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="text" name="headOfTheDepartment" id="headOfTheDepartment" placeholder="Директор кафедры" value={item.headOfTheDepartment || ''}
+                        <TextField required={true} type="text" name="headOfTheDepartment" id="headOfTheDepartment" margin="dense" variant="standard" label="Директор кафедры" value={item.headOfTheDepartment || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup className="mt-2">
                         <Button variant="contained" color="success" type="submit">Сохранить</Button>{' '}
-                        <Button variant="contained" color="error" href="/api/departments">Назад</Button>
+                        <Button variant="contained" color="error" href="/departments">Назад</Button>
                     </FormGroup>
                 </Form>
             </Container>

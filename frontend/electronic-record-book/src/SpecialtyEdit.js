@@ -3,10 +3,10 @@ import { withRouter } from 'react-router-dom';
 import { Container, Form, FormGroup } from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import axios from 'axios';
-import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import TextField from '@mui/material/TextField';
 
 class SpecialtyEdit extends Component {
 
@@ -47,7 +47,13 @@ class SpecialtyEdit extends Component {
 
     handleChange(event) {
         const target = event.target;
-        const value = target.value;
+        var value = target.value;
+        if (event.target.type == 'number') {
+            value = parseInt(value);
+            if (value > 2147483647) {
+                value = 2147483647;
+            }
+        }
         const name = target.name;
         let item = {...this.state.item};
         item[name] = value;
@@ -55,6 +61,11 @@ class SpecialtyEdit extends Component {
     }
 
     async handleSubmit(event) {
+        this.setState({
+            open: false,
+            ok: false,
+            err: ''
+        });
         event.preventDefault();
         const {item} = this.state;
         
@@ -121,20 +132,20 @@ class SpecialtyEdit extends Component {
                 {title}
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
-                        <Input required='true' type="text" name="name" id="name" placeholder="Имя специальности" value={item.name || ''}
+                        <TextField required={true} type="text" name="name" id="name" margin="dense" variant="standard" label="Имя специальности" value={item.name || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="number" name="price" id="price" placeholder="Цена (руб. в год)" value={item.price || ''}
+                        <TextField required={true} type="number" name="price" id="price" margin="dense" variant="standard" label="Цена (руб. в год)" value={item.price || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="number" name="departmentId" id="departmentId" placeholder="Id кафедры" value={item.departmentId || ''}
+                        <TextField required={true} type="number" name="departmentId" id="departmentId" margin="dense" variant="standard" label="Id кафедры" value={item.departmentId || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup className="mt-2">
                         <Button variant="contained" color="success" type="submit">Сохранить</Button>{' '}
-                        <Button variant="contained" color="error" href="/api/specialties">Назад</Button>
+                        <Button variant="contained" color="error" href="/specialties">Назад</Button>
                     </FormGroup>
                 </Form>
             </Container>

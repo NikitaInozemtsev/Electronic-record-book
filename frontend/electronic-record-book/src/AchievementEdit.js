@@ -3,13 +3,17 @@ import { withRouter } from 'react-router-dom';
 import { Container, Form, FormGroup } from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import axios from 'axios';
-import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
+import TextField from '@mui/material/TextField';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { format } from "date-fns";
 
 class AchievementEdit extends Component {
 
@@ -21,7 +25,7 @@ class AchievementEdit extends Component {
         disciplineId: '',
         mark: '',
         semester: '',
-        date: ''
+        date: new Date()
     };
 
     constructor(props) {
@@ -30,8 +34,7 @@ class AchievementEdit extends Component {
             item: this.emptyItem,
             ok: false,
             open: false,
-            err: '',
-            lastDate: ''
+            err: ''
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -43,7 +46,10 @@ class AchievementEdit extends Component {
 
     handleChange(event) {
         const target = event.target;
-        const value = target.value;
+        var value = target.value;
+        if (event.target.type == 'number') {
+            value = parseInt(value);
+        }
         const name = target.name;
         let item = {...this.state.item};
         item[name] = value;
@@ -51,10 +57,15 @@ class AchievementEdit extends Component {
     }
 
     async handleSubmit(event) {
+        this.setState({
+            open: false,
+            ok: false,
+            err: ''
+        });
         event.preventDefault();
         let {item} = this.state;
-        const dates = item.date.split('-');
-        item.date = dates[2] + '.' + dates[1] + '.' + dates[0];
+        var date = item.date;
+        item.date = format(date, "dd.MM.yyyy");
         
         axios.request({
             url: '/api/achievements/' ,
@@ -77,10 +88,7 @@ class AchievementEdit extends Component {
                 })
 
         );
-        this.setState({
-            lastDate: item.date
-        });
-        
+        item.date = date;
     }
 
     handleClose = (event, reason) => {
@@ -128,26 +136,26 @@ class AchievementEdit extends Component {
                 {title}
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
-                        <Input required='true' type="number" name="studentId" id="studentId" placeholder="Id студента" value={item.studentId || ''}
+                        <TextField required={true} type="number" name="studentId" id="studentId" margin="dense" variant="standard" label="Id студента" value={item.studentId || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="number" name="professorId" id="professorId" placeholder="Id преподавателя" value={item.professorId || ''}
+                        <TextField required={true} type="number" name="professorId" id="professorId" margin="dense" variant="standard" label="Id преподавателя" value={item.professorId || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="number" name="formOfControlId" id="formOfControlId" placeholder="Id формы контроля" value={item.formOfControlId || ''}
+                        <TextField required={true} type="number" name="formOfControlId" id="formOfControlId" margin="dense" variant="standard" label="Id формы контроля" value={item.formOfControlId || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="number" name="disciplineId" id="disciplineId" placeholder="Id дисциплины" value={item.disciplineId || ''}
+                        <TextField required={true} type="number" name="disciplineId" id="disciplineId" margin="dense" variant="standard" label="Id дисциплины" value={item.disciplineId || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
                     <InputLabel id="demo-simple-select-label">Оценка</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
-                        required='true'
+                        required={true}
                         id="mark"
                         name="mark"
                         value={item.mark || ''}
@@ -164,16 +172,32 @@ class AchievementEdit extends Component {
                         
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="number" name="semester" id="semester" placeholder="Семестер" value={item.semester || ''}
+                        <TextField required={true} type="number" name="semester" id="semester" margin="dense" variant="standard" label="Семестер" value={item.semester || ''}
                                onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Input required='true' type="date" name="date" id="date" placeholder="Дата" value={item.date || ''}
-                               onChange={this.handleChange} />
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker 
+                        allowSameDateSelection={true}
+                        inputFormat="dd.MM.yyyy"
+                        views={['year', 'month', 'day']}
+                        mask='__.__.____'
+                        showDaysOutsideCurrentMonth={true}
+                        value={item.date || new Date()}
+                        onChange={(newValue) => {
+                            let item = {...this.state.item};
+                            item['date'] = newValue;
+                            this.setState({item});
+                          }}
+                        renderInput={(params) => <TextField {...params} required={true} type="date" name="date" id="date" margin="dense" variant="standard" label="Дата"/>}
+                    />
+
+                    </LocalizationProvider>
+                        
                     </FormGroup>
                     <FormGroup className="mt-2">
                         <Button variant="contained" color="success" type="submit">Сохранить</Button>{' '}
-                        <Button variant="contained" color="error" href="/api/achievements">Назад</Button>
+                        <Button variant="contained" color="error" href="/achievements">Назад</Button>
                     </FormGroup>
                 </Form>
             </Container>
