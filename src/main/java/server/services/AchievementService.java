@@ -38,6 +38,10 @@ public class AchievementService {
         return achievementRepository.findAll(byFilter(filter), pageable);
     }
 
+    public List<Achievement> findAll(AchievementFilter filter) {
+        return achievementRepository.findAll(byFilter(filter));
+    }
+
     public Optional<Exception> createAchievement(AchievementDto achievementDto) {
 
         try {

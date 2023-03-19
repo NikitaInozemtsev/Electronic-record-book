@@ -14,13 +14,16 @@ import server.dto.AchievementDto;
 import server.dto.IdDto;
 import server.exception.NotFoundResourceException;
 import server.filters.AchievementFilter;
+import server.mappers.AchievementMapper;
 import server.models.Achievement;
+import server.services.AchievementExcelExporter;
 import server.services.AchievementService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -48,11 +51,25 @@ public class AchievementController {
         Page<Achievement> pageAchievements = service.findAll(filter, paging);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("achievements", pageAchievements.getContent());
+        response.put("achievements", pageAchievements.getContent().stream().map(AchievementMapper::mapToDto).collect(Collectors.toList()));
         response.put("totalItems", pageAchievements.getTotalElements());
         response.put("totalPages", pageAchievements.getTotalPages());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/excel")
+    public void listInExcel(HttpServletResponse response, AchievementFilter filter) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm");
+        String currentDateTime = dateFormatter.format(new Date());
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=achievements_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List<Achievement> pageAchievements = service.findAll(filter);
+
+        AchievementExcelExporter.export(response, pageAchievements);
     }
 
     @PostMapping(value = "/")

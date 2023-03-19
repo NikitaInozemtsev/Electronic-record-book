@@ -37,4 +37,8 @@ public class Professor {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Department department;
 
+    public String getFullName() {
+        return String.join(" ", surname, name, patronymic);
+    }
+
 }

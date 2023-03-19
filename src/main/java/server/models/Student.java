@@ -38,4 +38,8 @@ public class Student {
     @ManyToOne(targetEntity = Group.class)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Group group;
+
+    public String getFullName() {
+        return String.join(" ", surname, name, patronymic);
+    }
 }
